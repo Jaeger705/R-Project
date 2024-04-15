@@ -1,0 +1,93 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+```{r}
+# Load the necessary library
+library(data.table)
+
+# Read the data from CSV file
+df <- fread('C:/Users/bigbo/CodingTemple/R/Project/spaceship-titanic/train.csv')
+```
+
+```{r}
+
+
+cryosleep_homeplanet_count <- df[CryoSleep == TRUE, .N, by = HomePlanet]
+
+# Plotting
+library(ggplot2)
+ggplot(cryosleep_homeplanet_count, aes(x = HomePlanet, y = N, fill = HomePlanet)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Number of Passengers in CryoSleep by HomePlanet", x = "HomePlanet", y = "Number of Passengers") +
+  theme_minimal()
+```
+
+```{r}
+vip_homeplanet_count <- df[VIP == TRUE, .N, by = HomePlanet]
+print(vip_homeplanet_count)
+
+#Earth has no VIP's
+```
+
+```{r}
+# Count the number of passengers in CryoSleep based on HomePlanet
+cryosleep_homeplanet_count <- df[CryoSleep == TRUE, .N, by = HomePlanet]
+
+# Print the count of passengers in CryoSleep per HomePlanet
+print(cryosleep_homeplanet_count)
+```
+
+```{r}
+average_spent <- df[, .(RoomService = mean(RoomService, na.rm = TRUE),
+                        FoodCourt = mean(FoodCourt, na.rm = TRUE),
+                        ShoppingMall = mean(ShoppingMall, na.rm = TRUE),
+                        Spa = mean(Spa, na.rm = TRUE))]
+print(average_spent)
+```
+
+```{r}
+df[, Class := substr(Cabin, 1, 1)]
+total_spent_per_class <- df[, .(TotalSpent = sum(RoomService, FoodCourt, ShoppingMall, Spa, na.rm = TRUE)), by = Class]
+max_spent_class <- total_spent_per_class[TotalSpent == max(TotalSpent), Class]
+print(max_spent_class)
+```
+
+```{r}
+total_spent_per_service <- df[, .(RoomService = sum(RoomService, na.rm = TRUE),
+                                  FoodCourt = sum(FoodCourt, na.rm = TRUE),
+                                  ShoppingMall = sum(ShoppingMall, na.rm = TRUE),
+                                  Spa = sum(Spa, na.rm = TRUE),
+                                  VRDeck = sum(VRDeck, na.rm = TRUE)), by = Class]
+print(total_spent_per_service)
+```
+
+```{r}
+
+```
+
+```{r}
+
+europa_df <- df[HomePlanet == "Europa"]
+average_expenditures_europa <- colMeans(europa_df[, .(RoomService, FoodCourt, ShoppingMall, Spa, VRDeck)], na.rm = TRUE)
+print(average_expenditures_europa)
+```
+
+```{r}
+average_expenditures_by_planet <- df[, .(RoomService = mean(RoomService, na.rm = TRUE),
+                                         FoodCourt = mean(FoodCourt, na.rm = TRUE),
+                                         ShoppingMall = mean(ShoppingMall, na.rm = TRUE),
+                                         Spa = mean(Spa, na.rm = TRUE),
+                                         VRDeck = mean(VRDeck, na.rm = TRUE)), by = HomePlanet]
+print(average_expenditures_by_planet)
+```
+
+```{r}
+people_count_by_planet <- df[, .N, by = HomePlanet]
+print(people_count_by_planet)
+```

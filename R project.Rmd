@@ -1,6 +1,6 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output: html_noteboo
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
@@ -12,7 +12,7 @@ Try executing this chunk by clicking the *Run* button within the chunk or by pla
 library(data.table)
 
 # Read the data from CSV file
-df <- fread('C:/Users/bigbo/CodingTemple/R/Project/spaceship-titanic/train.csv')
+df <- fread('C:/Users/bigbo/CodingTemple/R/spaceship-titanic/train.csv')
 ```
 
 ```{r}
@@ -90,4 +90,11 @@ print(average_expenditures_by_planet)
 ```{r}
 people_count_by_planet <- df[, .N, by = HomePlanet]
 print(people_count_by_planet)
+```
+
+```{r}
+library(data.table)
+df[, Class := substr(Cabin, 1, 1)]
+common_homeplanet_per_class <- df[, .(MostCommonHomePlanet = names(which.max(table(HomePlanet)))), by = Class]
+print(common_homeplanet_per_class)
 ```
